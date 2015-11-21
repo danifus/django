@@ -7,6 +7,7 @@ import os
 import pickle
 import unittest
 import uuid
+import warnings
 
 from django.core.exceptions import SuspiciousOperation
 from django.core.serializers.json import DjangoJSONEncoder
@@ -15,7 +16,7 @@ from django.db import close_old_connections
 from django.http import (
     BadHeaderError, HttpResponse, HttpResponseNotAllowed,
     HttpResponseNotModified, HttpResponsePermanentRedirect,
-    HttpResponseRedirect, JsonResponse, QueryDict, SimpleCookie,
+    HttpResponseRedirect, JsonResponse, JSONResponse, QueryDict, SimpleCookie,
     StreamingHttpResponse, parse_cookie,
 )
 from django.test import SimpleTestCase
@@ -471,29 +472,30 @@ class HttpResponseSubclassesTests(SimpleTestCase):
         self.assertEqual(repr(response), expected)
 
 
-class JsonResponseTests(SimpleTestCase):
+class JSONResponseTests(SimpleTestCase):
+
     def test_json_response_non_ascii(self):
         data = {'key': 'łóżko'}
-        response = JsonResponse(data)
+        response = JSONResponse(data)
         self.assertEqual(json.loads(response.content.decode()), data)
 
     def test_json_response_raises_type_error_with_default_setting(self):
         with self.assertRaisesMessage(TypeError,
                 'In order to allow non-dict objects to be serialized set the '
                 'safe parameter to False'):
-            JsonResponse([1, 2, 3])
+            JSONResponse([1, 2, 3])
 
     def test_json_response_text(self):
-        response = JsonResponse('foobar', safe=False)
+        response = JSONResponse('foobar', safe=False)
         self.assertEqual(json.loads(response.content.decode()), 'foobar')
 
     def test_json_response_list(self):
-        response = JsonResponse(['foo', 'bar'], safe=False)
+        response = JSONResponse(['foo', 'bar'], safe=False)
         self.assertEqual(json.loads(response.content.decode()), ['foo', 'bar'])
 
     def test_json_response_uuid(self):
         u = uuid.uuid4()
-        response = JsonResponse(u, safe=False)
+        response = JSONResponse(u, safe=False)
         self.assertEqual(json.loads(response.content.decode()), str(u))
 
     def test_json_response_custom_encoder(self):
@@ -501,12 +503,26 @@ class JsonResponseTests(SimpleTestCase):
             def encode(self, o):
                 return json.dumps({'foo': 'bar'})
 
-        response = JsonResponse({}, encoder=CustomDjangoJSONEncoder)
+        response = JSONResponse({}, encoder=CustomDjangoJSONEncoder)
         self.assertEqual(json.loads(response.content.decode()), {'foo': 'bar'})
 
     def test_json_response_passing_arguments_to_json_dumps(self):
-        response = JsonResponse({'foo': 'bar'}, json_dumps_params={'indent': 2})
+        response = JSONResponse({'foo': 'bar'}, json_dumps_params={'indent': 2})
         self.assertEqual(response.content.decode(), '{\n  "foo": "bar"\n}')
+
+
+class JsonResponseDeprecationTests(JSONResponseTests):
+
+    def test_json_response_deprecation_warning(self):
+        with warnings.catch_warnings(record=True) as warns:
+            # prevent warnings from appearing as errors
+            warnings.simplefilter('always')
+            data = {'key': 'łóżko'}
+            JsonResponse(data)
+
+        self.assertEqual(len(warns), 1)
+        msg = str(warns[0].message)
+        self.assertEqual(msg, "`JsonResponse` is deprecated, use `JSONResponse` instead.")
 
 
 class StreamingHttpResponseTests(SimpleTestCase):

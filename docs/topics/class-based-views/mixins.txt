@@ -601,7 +601,7 @@ conversion to JSON once.
 
 For example, a simple JSON mixin might look something like this::
 
-    from django.http import JsonResponse
+    from django.http import JSONResponse
 
     class JSONResponseMixin(object):
         """
@@ -611,7 +611,7 @@ For example, a simple JSON mixin might look something like this::
             """
             Returns a JSON response, transforming 'context' to make the payload.
             """
-            return JsonResponse(
+            return JSONResponse(
                 self.get_data(context),
                 **response_kwargs
             )

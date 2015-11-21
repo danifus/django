@@ -5,6 +5,7 @@ import json
 import re
 import sys
 import time
+import warnings
 from email.header import Header
 
 from django.conf import settings
@@ -16,6 +17,7 @@ from django.utils import six, timezone
 from django.utils.encoding import (
     force_bytes, force_str, force_text, iri_to_uri,
 )
+from django.utils.deprecation import RemovedInDjango20Warning
 from django.utils.http import cookie_date
 from django.utils.six.moves import map
 from django.utils.six.moves.http_client import responses
@@ -488,7 +490,7 @@ class Http404(Exception):
     pass
 
 
-class JsonResponse(HttpResponse):
+class JSONResponse(HttpResponse):
     """
     An HTTP response class that consumes data to be serialized to JSON.
 
@@ -511,4 +513,11 @@ class JsonResponse(HttpResponse):
             json_dumps_params = {}
         kwargs.setdefault('content_type', 'application/json')
         data = json.dumps(data, cls=encoder, **json_dumps_params)
-        super(JsonResponse, self).__init__(content=data, **kwargs)
+        super(JSONResponse, self).__init__(content=data, **kwargs)
+
+
+class JsonResponse(JSONResponse):
+    def __init__(self, *args, **kwargs):
+        warnings.warn("`JsonResponse` is deprecated, use `JSONResponse` instead.",
+                      RemovedInDjango20Warning)
+        super(JsonResponse, self).__init__(*args, **kwargs)

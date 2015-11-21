@@ -3,7 +3,7 @@ import json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JSONResponse
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
 from django.test import Client
@@ -108,7 +108,7 @@ def return_undecodable_binary(request):
 
 
 def return_json_response(request):
-    return JsonResponse({'key': 'value'})
+    return JSONResponse({'key': 'value'})
 
 
 def return_json_file(request):

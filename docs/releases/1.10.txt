@@ -356,6 +356,14 @@ This prevents confusion about an assignment resulting in an implicit save.
   :class:`~django.contrib.gis.geos.Point` are deprecated in favor of the
   ``tuple`` property.
 
+:mod:`django.http`
+~~~~~~~~~~~~~~~~~~
+
+``django.http.JsonResponse`` has been renamed to
+:class:`~django.http.JSONResponse` in order to bring the capitalization of
+'JSON' inline with other references to JSON throughout the project.
+
+
 Miscellaneous
 ~~~~~~~~~~~~~
 

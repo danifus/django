@@ -354,4 +354,4 @@ def json_catalog(request, domain='djangojs', packages=None):
         'formats': get_formats(),
         'plural': plural,
     }
-    return http.JsonResponse(data)
+    return http.JSONResponse(data)

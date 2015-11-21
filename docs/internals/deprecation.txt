@@ -121,6 +121,9 @@ details on these changes.
 * The ``get_coords()`` and ``set_coords()`` methods of
   ``django.contrib.gis.geos.Point`` will be removed.
 
+* The backward compatible shim to rename ``django.http.JsonResponse`` to
+  :class:`~django.http.JSONResponse` will be removed.
+
 .. _deprecation-removed-in-1.10:
 
 1.10

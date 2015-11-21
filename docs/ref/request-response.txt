@@ -920,6 +920,16 @@ JsonResponse objects
 
 .. class:: JsonResponse(data, encoder=DjangoJSONEncoder, safe=True, json_dumps_params=None, **kwargs)
 
+    .. deprecated:: 1.10
+
+        :class:`JsonResponse` has been renamed to :class:`JSONResponse`. Use
+        :class:`JSONResponse` instead.
+
+JSONResponse objects
+====================
+
+.. class:: JSONResponse(data, encoder=DjangoJSONEncoder, safe=True, json_dumps_params=None, **kwargs)
+
     An :class:`HttpResponse` subclass that helps to create a JSON-encoded
     response. It inherits most behavior from its superclass with a couple
     differences:
@@ -947,13 +957,17 @@ JsonResponse objects
 
         The ``json_dumps_params`` argument was added.
 
+    .. versionchanged:: 1.10
+
+        This class replaced :class:`JsonResponse`.
+
 Usage
 -----
 
 Typical usage could look like::
 
-    >>> from django.http import JsonResponse
-    >>> response = JsonResponse({'foo': 'bar'})
+    >>> from django.http import JSONResponse
+    >>> response = JSONResponse({'foo': 'bar'})
     >>> response.content
     b'{"foo": "bar"}'
 
@@ -964,7 +978,7 @@ Serializing non-dictionary objects
 In order to serialize objects other than ``dict`` you must set the ``safe``
 parameter to ``False``::
 
-    >>> response = JsonResponse([1, 2, 3], safe=False)
+    >>> response = JSONResponse([1, 2, 3], safe=False)
 
 Without passing ``safe=False``, a :exc:`TypeError` will be raised.
 
@@ -974,7 +988,7 @@ Without passing ``safe=False``, a :exc:`TypeError` will be raised.
     <http://www.ecma-international.org/publications/standards/Ecma-262.htm>`_
     it was possible to poison the JavaScript ``Array`` constructor. For this
     reason, Django does not allow passing non-dict objects to the
-    :class:`~django.http.JsonResponse` constructor by default.  However, most
+    :class:`~django.http.JSONResponse` constructor by default.  However, most
     modern browsers implement EcmaScript 5 which removes this attack vector.
     Therefore it is possible to disable this security precaution.
 
@@ -984,7 +998,7 @@ Changing the default JSON encoder
 If you need to use a different JSON encoder class you can pass the ``encoder``
 parameter to the constructor method::
 
-    >>> response = JsonResponse(data, encoder=MyJSONEncoder)
+    >>> response = JSONResponse(data, encoder=MyJSONEncoder)
 
 .. _httpresponse-streaming:
 

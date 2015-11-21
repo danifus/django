@@ -228,7 +228,7 @@ AJAX example
 Here is a simple example showing how you might go about implementing a form that
 works for AJAX requests as well as 'normal' form POSTs::
 
-    from django.http import JsonResponse
+    from django.http import JSONResponse
     from django.views.generic.edit import CreateView
     from myapp.models import Author
 
@@ -240,7 +240,7 @@ works for AJAX requests as well as 'normal' form POSTs::
         def form_invalid(self, form):
             response = super(AjaxableResponseMixin, self).form_invalid(form)
             if self.request.is_ajax():
-                return JsonResponse(form.errors, status=400)
+                return JSONResponse(form.errors, status=400)
             else:
                 return response
 
@@ -253,7 +253,7 @@ works for AJAX requests as well as 'normal' form POSTs::
                 data = {
                     'pk': self.object.pk,
                 }
-                return JsonResponse(data)
+                return JSONResponse(data)
             else:
                 return response
 

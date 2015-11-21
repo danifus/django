@@ -7,7 +7,7 @@ import sys
 
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.urlresolvers import get_resolver
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JSONResponse
 from django.shortcuts import render, render_to_response
 from django.template import TemplateDoesNotExist
 from django.views.debug import (
@@ -270,7 +270,7 @@ def multivalue_dict_key_error(request):
 
 
 def json_response_view(request):
-    return JsonResponse({
+    return JSONResponse({
         'a': [1, 2, 3],
         'foo': {'bar': 'baz'},
         # Make sure datetime and Decimal objects would be serialized properly

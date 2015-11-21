@@ -7,7 +7,7 @@ from django.test import SimpleTestCase, override_settings
 
 
 @override_settings(ROOT_URLCONF='view_tests.generic_urls')
-class JsonResponseTests(SimpleTestCase):
+class JSONResponseTests(SimpleTestCase):
 
     def test_json_response(self):
         response = self.client.get('/json/response/')
